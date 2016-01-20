@@ -119,6 +119,7 @@ We say that set of challenges $\{c_1,\ldots,c_p\}$ is strong linearly independen
                                                                                                             
 
 \begin{theorem}
+\label{main}
 	Denote the output of OneDigit schema on a challenge $c$, by $p(c)$. We define $\mathcal{R}=\{p(c) \, | \, c\in\mathcal{C}\}$. For any challenge $c\in \mathcal{C}$ and any response $r\in \mathcal{R}$
 	\begin{itemize} 
 		\item[$(a)$]$\Pr[p(c)=r]=\dfrac{1}{10^d}$
@@ -370,7 +371,7 @@ Given a set of challenges $\mathcal{C}=\{c_1,\ldots,c_k\}$ s.t. $\forall i\in[k]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{HUM}
-In order to calculate the HUM, we first need to rewrite the steps of Alg.~\ref{alg:NotKnown} with more details
+In order to calculate the HUM, we first need to write the steps of Alg.~\ref{alg:NotKnown} in more details
 
 \begin{algorithm}
 \begin{alg}
@@ -400,6 +401,13 @@ HUM =  $2 \times$ (initialization) + $l \times$ (while loop condition) + $l \tim
 
 
 \subsection{Experiments}
+
+Theorem.~\ref{main} is saying that as long as a new challenge forms a strong linearly independent set with already seen challenges, the adversary can not guess the response to this new challenge. So the security of OneDigit schema will be summarized in the following question
+\begin{itemize}
+	\item[$\diamond$] Given a set of challenges $\mathcal{C}$, at each round, a new challenge $c \in \mathcal{C}$ is chosen uniformly at random. Let $\mathcal{C}_i$ be the set of challenges chosen till round $i$. What is the maximum $i$
+	such that $\mathcal{C}_i$ is a strong linearly independent set?
+	\end{itemize}
+
 
 \section{TODO}
 \begin{itemize}
