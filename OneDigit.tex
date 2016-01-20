@@ -87,7 +87,7 @@
 \maketitle
 
 \section{Notation}
-Let $\mathcal{A}$ be the set of alphabet. We assume that $|\mathcal{A}|=N$. For the case of passowrd generation, $\mathcal{A}=\{A,B,\ldots,Z\}$ and $N=26$. We denote the set of digits by $\mathcal{D}$, i.e., $\mathcal{D}=\{0,\ldots,9\}$. Let's $\mathcal{C}$ denotes the set of possible challenges. For the sake of simplicity, we assume that each challenge $c\in\mathcal{C}$ does not contain more than four repeated letters	.
+Let $\mathcal{A}$ be the set of alphabet. We assume that $|\mathcal{A}|=N$. For the case of passowrd generation, $\mathcal{A}=\{A,B,\ldots,Z\}$ and $N=26$. We denote the set of digits by $\mathcal{D}$, i.e., $\mathcal{D}=\{0,\ldots,9\}$. Let's $\mathcal{C}$ denotes the set of possible challenges. For the sake of simplicity, we assume that each challenge $c\in\mathcal{C}$ does not contain more than four repeated letters. We denote the $i^{th}$ coordinate of a vector $\vec{u}$ by $u_i$.
 
 \section{OneDigit Schema}
 
@@ -119,7 +119,7 @@ We say that set of challenges $\{c_1,\ldots,c_p\}$ is strong linearly independen
                                                                                                             
 
 \begin{theorem}
-\label{main}
+\label{thm:main}
 	Denote the output of OneDigit schema on a challenge $c$, by $p(c)$. We define $\mathcal{R}=\{p(c) \, | \, c\in\mathcal{C}\}$. For any challenge $c\in \mathcal{C}$ and any response $r\in \mathcal{R}$
 	\begin{itemize} 
 		\item[$(a)$]$\Pr[p(c)=r]=\dfrac{1}{10^d}$
@@ -335,20 +335,20 @@ We want to prove that there exists a vector $\vec{z}$ such that $\vec{z}\equiv\v
 $$
 \begin{array}{lcr}
 \begin{array}{l}
-\vec{z}_1\overset{5}{\equiv} \vec{x}_1\\
-\vec{z}_1\overset{2}{\equiv} \vec{y}_1
+{z}_1\overset{5}{\equiv} {x}_1\\
+{z}_1\overset{2}{\equiv} {y}_1
 \end{array} &
 \begin{array}{c}
 \ldots
 \end{array}&
 \begin{array}{r}
-\vec{z}_k\overset{5}{\equiv} \vec{x}_k\\
-\vec{z}_k\overset{2}{\equiv} \vec{y}_k
+{z}_k\overset{5}{\equiv} {x}_k\\
+{z}_k\overset{2}{\equiv} {y}_k
 \end{array}
 	
 \end{array}
 $$
-Using Chinese Remainder Theorem, there exist $\vec{z}_1,\ldots,\vec{z}_k$ satisfying the above congruences. Furthermore, for all $i\in[k]$, $\vec{z}_k\pmod{10}$ is unique. Therefore $z=[z_1,\ldots,z_k]\transp{}$ will be the unique solution to Eq.~\ref{eq:mod5}. 
+Using Chinese Remainder Theorem, there exist ${z}_1,\ldots,{z}_k$ satisfying the above congruences. Furthermore, for all $i\in[k]$, ${z}_k\pmod{10}$ is unique. Therefore $z=[z_1,\ldots,z_k]\transp{}$ will be the unique solution to Eq.~\ref{eq:mod5}. 
 
 
 So far we have shown that every set $\mathcal{F}_{N-k}=\{\vec{f}_j\in\mathcal{D}\, : \, j \notin \{j_1,\ldots,j_k\} \}$, there is a unique set $\mathcal{F}_k=\{\vec{f}_j\in\mathcal{D}:\,\, j\in\{j_1,\ldots,j_k\}\}$ such that $\mathcal{F}_k \cup\mathcal{F}_{N-k}$ is a solution for system \ref{eq:matrix}. Therefore, the number of solutions to system of linear equations \ref{eq:matrix} is number of sets $\mathcal{F}_{N-k}=\{\vec{f}_j\in\mathcal{D}\, : \, j \notin \{j_1,\ldots,j_k\} \}$ which is equal to $10^{N-k}$.
@@ -398,22 +398,27 @@ In order to calculate the HUM, we first need to write the steps of Alg.~\ref{alg
 HUM =  $2 \times$ (initialization) + $l \times$ (while loop condition) + $l \times$ (map) + $l \times$ (add) + $l \times$ (shift pointer) + (end while) + $2 \times$ (print) = $4l+5$
 
 
+\subsection{Security: $Q$ value}
 
-
-\subsection{Experiments}
-
-Theorem.~\ref{main} is saying that as long as a new challenge forms a strong linearly independent set with already seen challenges, the adversary can not guess the response to this new challenge. So the security of OneDigit schema will be summarized in the following question
+Theorem.~\ref{thm:main} is saying that as long as a new challenge forms a strong linearly independent set with already observed challenges, the adversary can not predict the response to this new challenge. In order to compute the value of $Q$ for OneDigit schema we should answer the following question:
 \begin{itemize}
 	\item[$\diamond$] Given a set of challenges $\mathcal{C}$, at each round, a new challenge $c \in \mathcal{C}$ is chosen uniformly at random. Let $\mathcal{C}_i$ be the set of challenges chosen till round $i$. What is the maximum $i$
 	such that $\mathcal{C}_i$ is a strong linearly independent set?
 	\end{itemize}
+To answer the above question, we ran the following experiment. We chose the challenge set $\mathcal{C}$ to be the set of all the valid website names. At each iteration, our program choses a challenge $c$ uniformly at random from $\mathcal{C}$ and checks if $c$ along with challenges chosen so far, forms a strong linearly independent set. If yes, it saves the number of iterations as the $Q$ value. Otherwise, it will continue. We repeated this procedure for $1000$ times and took the average of all the saved $Q$ values. The following table shows the result:
+
+\vspace{3mm}
 
 
-\section{TODO}
-\begin{itemize}
-\item add reference for Chinese Remainder Theorem?	
-\item Prop. 5 proof.
-\end{itemize}
+\begin{center}
+\begin{tabular}{c|r}
+Number of trials              & Q  \\
+\hline
+1000              &   $\sim 18$             \\
+\end{tabular}
+\label{QValue}
+\end{center}
+
 
 
 
