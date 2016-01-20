@@ -1,0 +1,414 @@
+\documentclass{article}
+\textwidth = 420pt
+\oddsidemargin = 15pt
+
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{amssymb, amsmath, amsfonts, amsthm}
+\usepackage{thmtools}
+\usepackage{algorithm} 
+\usepackage{enumitem}
+
+\newcommand{\mc}{\mathcal}
+\setlength{\parindent}{24pt}
+\renewcommand{\bar}[1]{\overline{#1}} 
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{conj}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\ConjName}[1]{\label{con:#1}}
+\newcommand{\Conj}[1]{Conjecture~\ref{con:#1}}
+\newcommand{\ProblemName}[1]{\label{prob:#1}}
+\newcommand{\Problem}[1]{Problem~\ref{prob:#1}}
+\renewcommand{\dot}{\bullet}
+\newcommand{\Tr}{\operatorname{tr}}
+\newcommand{\eps}{\epsilon}
+
+\newcommand{\lmax}{\lambda_\mathrm{max}}
+\newcommand{\lmin}{\lambda_\mathrm{min}}
+\newcommand{\ufinal}{u_\mathrm{final}}
+\newcommand{\lfinal}{l_\mathrm{final}}
+\newcommand{\umax}{u_\mathrm{max}}
+
+\newcommand{\Symraw}{\mathbb{S}}
+\newcommand{\Sym}[1][]{\Symraw^{\ifthenelse{\equal{#1}{}}{m}{#1}}}
+\newcommand{\Psd}[1][]{\Symraw_+^{\ifthenelse{\equal{#1}{}}{m}{#1}}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\iprod}[2]{\langle #1, #2 \rangle}
+\newcommand{\paren}[2][]{#1({#2}#1)}
+\newcommand{\qform}[2]{\transp{#2}#1#2}
+\newcommand{\transp}[1]{#1^T}
+
+
+
+% Simple (outer) environment for algorithms
+\newenvironment{outer_alg}{
+    \begin{list}{}{
+        \setlength{\itemsep}{2pt}
+        \setlength{\parsep}{0pt}
+        \setlength{\parskip}{0pt}
+        \setlength{\topsep}{1pt}
+        \setlength{\leftmargin}{5pt}
+    }
+}
+{
+    \end{list}
+}
+
+% Simple environments for algorithms
+\newenvironment{alg}{
+    \begin{list}{}{
+        \setlength{\itemsep}{2pt}
+        \setlength{\parsep}{0pt}
+        \setlength{\parskip}{0pt}
+        \setlength{\topsep}{1pt}
+    }
+}
+{
+    \end{list}
+}
+
+\DeclareMathOperator{\argmin}{argmin}
+
+%%%%% Title %%%%%
+\title{\LARGE OneDigit Schema}
+\author{}
+
+
+%%%%% Document Body %%%%%
+\begin{document}
+\maketitle
+
+\section{Notation}
+Let $\mathcal{A}$ be the set of alphabet. We assume that $|\mathcal{A}|=N$. For the case of passowrd generation, $\mathcal{A}=\{A,B,\ldots,Z\}$ and $N=26$. We denote the set of digits by $\mathcal{D}$, i.e., $\mathcal{D}=\{0,\ldots,9\}$. Let's $\mathcal{C}$ denotes the set of possible challenges. For the sake of simplicity, we assume that each challenge $c\in\mathcal{C}$ does not contain more than four repeated letters	.
+
+\section{OneDigit Schema}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Preprocessing step}
+\begin{itemize}
+	\item[$\cdot$] Memorize a a random map $f:\mathcal{A} \to \mathcal{D}$
+	\item[$\cdot$] Memorize a random string $s = s_1 \ldots s_{d-1}\in \mathcal{D}^{d-1}$
+\end{itemize}
+
+\subsection{Processing step}
+
+\begin{algorithm}
+\label{OneDigit}
+\begin{alg}
+\item[] Input: Challenge $c=c_1 \ldots c_l$
+\item[] $g \overset{10}{\equiv} f(c_1)+\ldots +f(c_l)$
+\item[] Output: Response $sg$
+\label{alg:NotKnown}
+\end{alg}
+\caption{OneDigit schema}
+\end{algorithm}
+
+Before stating the main theorem of this note, we define the notion of strong linearly independence.
+
+\begin{definition}
+We say that set of challenges $\{c_1,\ldots,c_p\}$ is strong linearly independent$\pmod{10}$ if $\{c_1,\ldots,c_p\}$ is linearly independent$\pmod{5}$ and$\pmod{2}$. Note that a direct consequence of strong linear indepence is linear independence.
+\end{definition}
+                                                                                                            
+
+\begin{theorem}
+	Denote the output of OneDigit schema on a challenge $c$, by $p(c)$. We define $\mathcal{R}=\{p(c) \, | \, c\in\mathcal{C}\}$. For any challenge $c\in \mathcal{C}$ and any response $r\in \mathcal{R}$
+	\begin{itemize} 
+		\item[$(a)$]$\Pr[p(c)=r]=\dfrac{1}{10^d}$
+	\end{itemize}
+Furthermore, assume that we have made $k$ observations $\big(c_1,p(c_1)\big),\ldots, \big(c_k, p(c_k)\big)$. Then, $\forall g_{k+1}\in\mathcal{D}$ and $\forall c_{k+1}\in \mathcal{C}$ s.t. $\{c_1,\ldots,c_k,c_{k+1}\}$ is strong linearly independent$\pmod{10}$ 
+	\begin{itemize}
+		\item[$(b)$] $\Pr[p(c_{k+1})=s g_{k+1} \, | \, (p(c_1)=s g_1),\ldots, (p(c_k)=s g_k)]=1/10$
+	\end{itemize}
+Part $(a)$ is saying that without having any prior information, the probability of guessing the correct response to any single challenge is ${1}/{10^d}$. In other words, for any two responses $r_1$ and $r_2$
+$$\Pr[p(c)=r_1]=\Pr[p(c)=r_2]$$
+
+\noindent Now assume that the adversary has observed $k$ (input, output) pairs and she is trying to guess the response to a new challenge $c_{k+1}$. After seeing the first (input, output) pair, she will know the value of $s$. So the only unknown part of $p(c_{k+1})$ is the single digit $g_{k+1}$. Part $(b)$ is saying that for any new challenge $c_{k+1}$ which forms a strong linearly independent set with $k$ observed challenges, the adversary can't do better than guessing $g_{k+1}$ randomly.
+
+\end{theorem}
+
+
+\begin{proof}
+
+\begin{itemize}
+	\item[(a)]
+
+ For any $c\in\mathcal{C}, r\in\mathcal{R}$. Let $r=r_1\ldots r_d$
+	$$
+	\begin{array}{lcl}
+		\Pr[p(c)=r] & = &
+		\Pr[p(c)_1\ldots p(c)_{d-1}=r_1\ldots r_{d-1}]\Pr[p(c)_d=r_d] \\
+		& =&
+	 \Pr[s=r_1\ldots r_{d-1}]\Pr[p(c)_d=r_d]
+	\end{array}
+	$$
+	Since each digit of string $s$ is chosen independently at random, the above formula is equal to
+	$$
+	\Pr[s_1=r_1]\ldots \Pr[s_{d-1}=r_{d-1}]\Pr[r(c)_d=r_d]
+	$$
+	 The first $d-1$ probabilities appearing above are each equal to $1/10$. Thus we only need to compute $\Pr[r(c)_d=r_d]= 
+	        \Pr[f(c_1)+\ldots+f(c_{l})\equiv r_d \pmod{10} ]$. One way to compute this probability is to count the number of maps $f$ that satisfy 
+	\begin{equation}
+		\label{eq:probability}
+	        f(c_1)+\ldots+f(c_{l})\equiv r_d \pmod{10}	
+	    \end{equation}
+
+	  and divide it by the total number of maps $f:\mathcal{A}\to \mathcal{D}$. What is the number of maps $f$ that satisfy Eq.~\ref{eq:probability} ? One can choose $f(c_1),\ldots ,f(c_{l-1})$ arbitrarily, then $f(c_l)$ will be chosen uniquely by $f(c_l)\equiv r_d-\sum_{i=1}^{l-1}f(c_i)\pmod{10}$. So the total number of choices of $f$ will be $10^{N-{l}}$ for the letters that are not present in $c$, $10^{{l-1}}$ for the first $l-1$ letters in $c$ and 1 for the last letter in $c$. So the total number of choices is $10^{N-l}10^{l-1}=10^{N-1}$. Note that the total number of maps $f:\mathcal{A}\to \mathcal{D}$ is $10^{N}$. This leads to
+	$$
+	\Pr[r(c)_d=r_d]=\Pr[f(c_1)+\ldots+f(c_l)=r_d]=\dfrac{10^{N-1}}{10^{N}}=\frac{1}{10}
+	$$
+	Consequently, accounting for the fixed string $s$
+	$$
+	\Pr[r(c)=r]=\frac{1}{10^{d-1}}\frac{1}{10}=\frac{1}{10^d}
+	$$
+	
+\item[(b)]
+	Now assume that the adversary have observed $k$ $($challenge, response$)$ pairs 
+	$\big(c_1, p(c_1)=s g_1\big)$,\\$\ldots$,$\big(c_k, p(c_k)=s g_k\big)$, and we want to compute
+	$$
+	\Pr[\big(p(c_{k+1})=s g_{k+1}\big) \, | \, \big(p(c_1)=s g_1\big),\ldots, \big(p(c_k)=s g_k\big)]
+	$$
+	This is equal to
+	$$
+	 \Pr[\big(p(c_{k+1})_d=g_{k+1}\big)\, | \, \big(p(c_1)_d=g_1\big),\ldots, \big(p(c_k)_d=g_k\big)]
+	 $$
+	 which is equal to 
+	 \begin{equation}
+	 \label{eq:probability}
+	 \frac{\Pr[\big(p(c_{k+1})_d=g_{k+1}\big), \big(p(c_1)_d=g_1\big),\ldots, \big(p(c_k)_d=g_k\big)]}{\Pr[\big(p(c_1)_d=g_1\big),\ldots, \big(p(c_k)_d=g_k\big)}	
+	 \end{equation}
+	 
+%	$$
+%	\Pr[r(c_{k+1})=s^*d \, | \, (c_1,s^*d_1),\ldots, (c_1,s^*d_k)]=
+%	 \dfrac{\Pr[(c_1,s^*d_1),\ldots, (c_1,s^*d_k), (c_{k+1},s^*d)]}{\Pr[(c_1,s^*d_1),\ldots, (c_1,s^*d_k)]}
+%	$$
+	We start by computing the value of denominator. The nominator value can be achieved similarly. In order to compute $\Pr[\big(p(c_1)_d=g_1\big),\ldots, \big(p(c_k)_d=g_k\big)]$, we should count the number of mappings $f$ that satisfy 
+	
+	\begin{equation}
+	\label{linearSet}
+	\left\{ \begin{array}{l}
+     f(c_{11})+\ldots+ f(c_{1l})\equiv g_1 \pmod{10}\\
+     \vdots       \\
+     f(c_{k1})+\ldots+ f(c_{kl})\equiv g_{k} \pmod{10}
+    \end{array} \right.	
+	\end{equation}
+In the next lemma, we show that the number of solutions to above $k$ linear equations is $10^{N-{k}}$. Therefore, the value of the ratio~\eqref{eq:probability} is equal to
+$$
+\frac{10^{n-{k+1}}}{10^{n-k}} = \frac{1}{10}
+$$
+\end{itemize}
+\end{proof}
+
+\begin{lemma}
+\label{lem:linearIndep}
+	Given a function $f:\mathcal{A}\to \mathcal{D}$ and set $\{c_1,\ldots,c_k\} \subseteq \mathcal{C}$ strong linearly independent and $g_1,\ldots,g_{k+1}\in\mathcal{D}$, the system of linear equations~\ref{linearSet}, has $10^{N-{k}}$ solutions. 
+\end{lemma}	
+\begin{proof}
+Assume there is an ordering $a_1,\ldots,a_N$ on elements of $\mathcal{A}$. Let's define the $N$-dimensional column vector $\vec{f}$ such that $\vec{f}_i=f(a_i)$ s.t. $a_i$ is the $i^{th}$ element of $\mathcal{A}$. Similarly, for every challenge $c\in\mathcal{C}$, we define the $N$-dimensional row vector $\vec{c}$ as follows. The $i^{th}$ coordinate of $\vec{c}$, $\vec{c}_i$, is the number of occurrence of the $a_i$ in $c$. In this vector setting, the last system of equations will be equivalent to 
+
+
+	\begin{equation}
+	\label{eq:matrix}
+	\left\{ \begin{array}{lcr}
+     \vec{c_1}\cdot \vec{f} \overset{10}{\equiv} g_1 &  \\
+     \vdots  & \Rightarrow &  
+     
+     \left[ \begin{array}{l}
+     \vec{c}_1 \\
+     \vdots \\
+     \vec{c}_{k} \\
+     \end{array}
+     \right]     \cdot\vec{f}\overset{10}{\equiv}
+     
+     \left[ \begin{array}{l}
+     {g}_1 \\
+     \vdots \\
+     {g}_{k} \\
+     \end{array}
+     \right]     
+      \\
+     
+     \vec{c}_{k}\cdot \vec{f} \overset{10}{\equiv} g_{k} & &
+    \end{array} \right.
+    \end{equation}
+   	Let's define
+   	$$
+     C= \left[ \begin{array}{l}
+     \vec{c}_1 \\
+     \vdots \\
+     \vec{c}_{k}
+	 \end{array}\right] 
+	 ,\,\,\, \vec{g} = 
+	 \left[
+	 \begin{array}{l}
+	 	g_1\\
+	    \vdots \\
+	 	g_k
+	 \end{array}
+	 \right] 
+   	$$
+   	
+By assumption, rows of matrix $C$ are linearly independent$\pmod{2}$, thus there must be $k$ columns $\{C^{j_1},\ldots,C^{j_k}\}$ that are linearly independent$\pmod{2}$. Using Prop.~\ref{prop:mod2}, $\{C^{j_1},\ldots,C^{j_k}\}$ are linearly independent$\pmod{5}$ as well.
+   
+   
+   We claim that for any set $\mathcal{F}_{N-k}=\{\vec{f}_j\in\mathcal{D}\, : \, j \in \{j_1,\ldots,j_k\}^c \}$, there will be a unique set $\mathcal{F}_k=\{\vec{f}_j\in\mathcal{D}:\,\, j\in\{j_1,\ldots,j_k\}\}$ such that $\mathcal{F}_k \cup\mathcal{F}_{N-k}$ is a solution for system \ref{eq:matrix}.
+ 
+%   This will lead to $10^{26-{k+1}}=10^{25-k}$ different choices for $\vec{f}$.
+
+ 
+  Given a set $\mathcal{F}_{N-k}$, let's substitute arbitrary values of $f_j$ for $j\notin\{j_1,\ldots,j_{k}\}$ in Eq.~3. So the matrix equation will be simplified as follows
+ 
+ $$
+  \begin{array}{l}
+ [C^{j_1},\ldots, C^{j_k}] 
+ \left[ \begin{array}{l}
+ f_{j_1} \\
+ \vdots \\
+ f_{j_k}
+ \end{array}	 \right] \overset{10}{\equiv}
+ \left[\begin{array}{l}
+ g'_{j_1} \\
+ \vdots \\
+ g'_{j_k}
+ \end{array}\right] 
+  \end{array} 
+  $$
+ 
+Therefore 
+\begin{equation}
+\label{eq:mod5}
+  \begin{array}{l}
+ [C^{j_1},\ldots, C^{j_k}] 
+ \left[ \begin{array}{l}
+ f_{j_1} \\
+ \vdots \\
+ f_{j_k}
+ \end{array}	 \right] \overset{5}{\equiv}
+ \left[\begin{array}{l}
+ g'_{j_1} \\
+ \vdots \\
+ g'_{j_k}
+ \end{array}\right],
+ 
+  \begin{array}{l}
+ [C^{j_1},\ldots, C^{j_{k}}] 
+ \left[ \begin{array}{l}
+ f_{j_1} \\
+ \vdots \\
+ f_{j_{k}}
+ \end{array}	 \right] \overset{2}{\equiv}
+ \left[\begin{array}{l}
+ g'_{j_1} \\
+ \vdots \\
+ g'_{j_k}
+ \end{array}\right] 
+ \end{array} 
+ 
+ 
+ \end{array} 
+  \end{equation}
+ 
+Since matrix $[C^{j_1},\ldots,C^{j_k}]$ is full rank$\pmod{5}$ and$\pmod{2}$, the above linear equations respectively has unique solution $\vec{x}\pmod{5}$ and $\vec{y}\pmod{2}$. We claim that, there exists a vector $\vec{z}$ such that $\vec{z}\equiv\vec{x}\pmod{5}$ and $\vec{z}\equiv\vec{y}\pmod{2}$. To prove our claim, we first need to briefly remind Chinese Remainder Theorem.
+
+\begin{theorem}(Chinese Remainder Theorem)
+\label{chinese}
+Suppose $n_1, ..., n_k$ are positive integers that are pairwise coprime. Then, for any given sequence of integers $a_1, ..., a_k$, there exists an integer $x$ solving the following system of simultaneous congruences.
+$$
+\left\{ \begin{array}{cl}
+     x \equiv a_1 &\pmod{n_1} \\
+      \vdots &\\
+      x \equiv a_k &\pmod{n_k} \\
+\end{array} \right.		
+$$
+Furthermore, any two solutions of this system are congruent modulo the product $N = n_1 \ldots n_k$. Hence, there is a unique (non-negative) solution less than $N$.
+\end{theorem}
+
+We want to prove that there exists a vector $\vec{z}$ such that $\vec{z}\equiv\vec{x}\pmod{5}$ and $\vec{z}\equiv\vec{y}\pmod{2}$. Consider the following $k$ systems of simultaneous congruences:
+$$
+\begin{array}{lcr}
+\begin{array}{l}
+\vec{z}_1\overset{5}{\equiv} \vec{x}_1\\
+\vec{z}_1\overset{2}{\equiv} \vec{y}_1
+\end{array} &
+\begin{array}{c}
+\ldots
+\end{array}&
+\begin{array}{r}
+\vec{z}_k\overset{5}{\equiv} \vec{x}_k\\
+\vec{z}_k\overset{2}{\equiv} \vec{y}_k
+\end{array}
+	
+\end{array}
+$$
+Using Chinese Remainder Theorem, there exist $\vec{z}_1,\ldots,\vec{z}_k$ satisfying the above congruences. Furthermore, for all $i\in[k]$, $\vec{z}_k\pmod{10}$ is unique. Therefore $z=[z_1,\ldots,z_k]\transp{}$ will be the unique solution to Eq.~\ref{eq:mod5}. 
+
+
+So far we have shown that every set $\mathcal{F}_{N-k}=\{\vec{f}_j\in\mathcal{D}\, : \, j \notin \{j_1,\ldots,j_k\} \}$, there is a unique set $\mathcal{F}_k=\{\vec{f}_j\in\mathcal{D}:\,\, j\in\{j_1,\ldots,j_k\}\}$ such that $\mathcal{F}_k \cup\mathcal{F}_{N-k}$ is a solution for system \ref{eq:matrix}. Therefore, the number of solutions to system of linear equations \ref{eq:matrix} is number of sets $\mathcal{F}_{N-k}=\{\vec{f}_j\in\mathcal{D}\, : \, j \notin \{j_1,\ldots,j_k\} \}$ which is equal to $10^{N-k}$.
+\end{proof}
+
+\begin{proposition}
+\label{prop:mod2}
+Given a set of challenges $\mathcal{C}=\{c_1,\ldots,c_k\}$ s.t. $\forall i\in[k]$, the challenge $c_i$ does not contain more than four repeated letters. If $\mathcal{C}$ is linearly independent$\pmod{2}$, this implies that it is linearly independent$\pmod{5}$ as well.
+\end{proposition}
+\begin{proof}
+	
+\end{proof}
+	
+	
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{HUM}
+In order to calculate the HUM, we first need to rewrite the steps of Alg.~\ref{alg:NotKnown} with more details
+
+\begin{algorithm}
+\begin{alg}
+\item[] Input: Challenge $c=c_1 \ldots c_l$
+\item[] Set $i=1$, SUM$=0$
+\item[] While not EndOfChallenge :
+
+\begin{itemize}
+	\item[] $\begin{array}{lr}
+		\text{Compute } f(c_i) & \text{(Applying the map)} \\
+		\text{SUM} \overset{10}{\equiv} \text{SUM} + f(c_i) & \text{(Add to the running sum)} \\
+			i=i+1 & \text{(shift pointer)} 
+	\end{array}$
+\end{itemize}
+
+\item[] Print fixed string $s$
+\item[] Print SUM
+
+\label{alg:HUM}
+\end{alg}
+\caption{OneDigit schema}
+\end{algorithm}
+
+HUM =  $2 \times$ (initialization) + $l \times$ (while loop condition) + $l \times$ (map) + $l \times$ (add) + $l \times$ (shift pointer) + (end while) + $2 \times$ (print) = $4l+5$
+
+
+
+
+\subsection{Experiments}
+
+\section{TODO}
+\begin{itemize}
+\item add reference for Chinese Remainder Theorem?	
+\item Prop. 5 proof.
+\end{itemize}
+
+
+
+
+\end{document}
+ 
