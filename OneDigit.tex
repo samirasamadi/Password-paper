@@ -87,9 +87,7 @@
 \maketitle
 
 \section{Notation}
-Let $\mathcal{A}$ be the set of alphabet. We assume that $|\mathcal{A}|=N$. For the case of passowrd generation, $\mathcal{A}=\{A,B,\ldots,Z\}$ and $N=26$. We denote the set of digits by $\mathcal{D}$, i.e., $\mathcal{D}=\{0,\ldots,9\}$. Let's $\mathcal{C}$ denotes the set of possible challenges. For the sake of simplicity, we assume that each challenge $c\in\mathcal{C}$ does not contain more than four repeated letters. We denote the $i^{th}$ coordinate of a vector $\vec{u}$ by $u_i$.
-
-\section{OneDigit Schema}
+Let $\mathcal{A}$ be the set of alphabet. We assume that $|\mathcal{A}|=N$. For the case of passowrd generation, $\mathcal{A}=\{A,B,\ldots,Z\}$ and $N=26$. We denote the set of digits by $\mathcal{D}$, i.e., $\mathcal{D}=\{0,\ldots,9\}$. Let's $\mathcal{C}$ denotes the set of possible challenges. We denote the $i^{th}$ coordinate of a vector $\vec{u}$ by $u_i$. \section{OneDigit Schema}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Preprocessing step}
@@ -131,7 +129,7 @@ Furthermore, assume that we have made $k$ observations $\big(c_1,p(c_1)\big),\ld
 Part $(a)$ is saying that without having any prior information, the probability of guessing the correct response to any single challenge is ${1}/{10^d}$. In other words, for any two responses $r_1$ and $r_2$
 $$\Pr[p(c)=r_1]=\Pr[p(c)=r_2]$$
 
-\noindent Now assume that the adversary has observed $k$ (input, output) pairs and she is trying to guess the response to a new challenge $c_{k+1}$. After seeing the first (input, output) pair, she will know the value of $s$. So the only unknown part of $p(c_{k+1})$ is the single digit $g_{k+1}$. Part $(b)$ is saying that for any new challenge $c_{k+1}$ which forms a strong linearly independent set with $k$ observed challenges, the adversary can't do better than guessing $g_{k+1}$ randomly.
+\noindent Now assume that the adversary has observed $k$ (challenge, response) pairs and she is trying to guess the response to a new challenge $c_{k+1}$. After seeing the first (challenge, response) pair, she will know the value of $s$. So the only unknown part of $p(c_{k+1})$ is the single digit $g_{k+1}$. Part $(b)$ is saying that for any new challenge $c_{k+1}$ which forms a strong linearly independent set with $k$ previously observed challenges, the adversary can not do better than guessing $g_{k+1}$ randomly.
 
 \end{theorem}
 
@@ -200,53 +198,88 @@ $$\Pr[p(c)=r_1]=\Pr[p(c)=r_2]$$
      f(c_{k1})+\ldots+ f(c_{kl})\equiv g_{k} \pmod{10}
     \end{array} \right.	
 	\end{equation}
-In the next lemma, we show that the number of solutions to above $k$ linear equations is $10^{N-{k}}$. Therefore, the value of the ratio~\eqref{eq:probability} is equal to
+Lemma~\ref{lem:linearIndep} shows that the number of solutions to above $k$ linear equations is $10^{N-{k}}$. Therefore, the value of the ratio~\eqref{eq:probability} is equal to
 $$
 \frac{10^{n-{k+1}}}{10^{n-k}} = \frac{1}{10}
 $$
 \end{itemize}
 \end{proof}
+The main component of lemma~\ref{lem:linearIndep} is to count the number of solutions to a system of linear equations mod a prime number $p$. Lemma~\ref{lem:linearIndepp} achieves this result.
+
+
+\begin{lemma}
+\label{lem:linearIndepp}
+Given a prime number $p$, matrix $C_{k\times N}$ with $k$ linearly independent rows$\pmod{p}$, and vector ${g}_{k\times 1}$, the number of solutions to $C{x} \overset{p}{\equiv} {g}$ is $p^{N-k}$.
+\end{lemma}
+
+
+\begin{proof}  	
+By assumption, rows of matrix $C$ are linearly independent$\pmod{p}$, thus there must be $k$ columns $\{C^{j_1},\ldots,C^{j_k}\}$ that are linearly independent$\pmod{p}$.   
+   Let's denote the $j^{th}$ coordinate of vector $x$ by $x_j$. We claim that for any set $\mathcal{X}_{N-k}=\{{x}_j\in\{0,\ldots,p-1\}\, : \, j \notin \{j_1,\ldots,j_k\} \}$, there will be a unique set $\mathcal{X}_k=\{{x}_j\in\{0,\ldots,p-1\}:\,\, j\in\{j_1,\ldots,j_k\}\}$ such that $x=\mathcal{X}_k \cup\mathcal{X}_{N-k}$ is a solution for system $C{x}\overset{p}{\equiv} {g}$.
+ 
+  Given an arbitrary set $\mathcal{X}_{N-k}$, let's substitute values of $x_j$ for $j\notin\{j_1,\ldots,j_{k}\}$ in ${x}$ and simplify the equation $Cx\overset{p}{\equiv} g$ :
+ 
+ $$
+  \begin{array}{l}
+ [C^{j_1},\ldots, C^{j_k}] 
+ \left[ \begin{array}{l}
+ x_{j_1} \\
+ \vdots \\
+ x_{j_k}
+ \end{array}	 \right] \overset{p}{\equiv}
+ \left[\begin{array}{l}
+ g'_{1} \\
+ \vdots \\
+ g'_{k}
+ \end{array}\right] 
+  \end{array} 
+  $$
+Where $g'_{l}= g_l -\sum_{i\notin \{j_1,\ldots,j_k\}} C_{li}x_{i}$ for all $l\in\{1,\ldots,k\}$. 
+
+Since matrix $[C^{j_1},\ldots,C^{j_k}]$ is full rank$\pmod{p}$, the above linear equation has unique solution ${x}\pmod{p}$. So far we have proved that for every set $\mathcal{X}_{N-k}=\{{x}_j\in\{0,\ldots,p-1\}\, : \, j \notin \{j_1,\ldots,j_k\} \}$, there is a unique set $\mathcal{X}_k=\{{x}_j\in\{0,\ldots,p-1\}:\,\, j\in\{j_1,\ldots,j_k\}\}$ such that $x=\mathcal{X}_k \cup\mathcal{X}_{N-k}$ is a solution for system $C{x}\overset{p}{\equiv} {g}$. This concludes that the number of solutions to $C{x}\overset{p}{\equiv} {g}$ is equal to the number of possible sets $\mathcal{X}_{N-k}$ which is equal to $p^{N-k}$. 
+
+\end{proof}
+
 
 \begin{lemma}
 \label{lem:linearIndep}
 	Given a function $f:\mathcal{A}\to \mathcal{D}$ and set $\{c_1,\ldots,c_k\} \subseteq \mathcal{C}$ strong linearly independent and $g_1,\ldots,g_{k+1}\in\mathcal{D}$, the system of linear equations~\ref{linearSet}, has $10^{N-{k}}$ solutions. 
 \end{lemma}	
 \begin{proof}
-Assume there is an ordering $a_1,\ldots,a_N$ on elements of $\mathcal{A}$. Let's define the $N$-dimensional column vector $\vec{f}$ such that $\vec{f}_i=f(a_i)$ s.t. $a_i$ is the $i^{th}$ element of $\mathcal{A}$. Similarly, for every challenge $c\in\mathcal{C}$, we define the $N$-dimensional row vector $\vec{c}$ as follows. The $i^{th}$ coordinate of $\vec{c}$, $\vec{c}_i$, is the number of occurrence of the $a_i$ in $c$. In this vector setting, the last system of equations will be equivalent to 
-
+Assume there is an ordering $a_1,\ldots,a_N$ on elements of $\mathcal{A}$. Let's define the $N$-dimensional column vector ${f}$ such that ${f}_i=f(a_i)$. Given challenges $\{c_1,\ldots,c_k\}$, for every challenge $c_i$, we define the $N$-dimensional row vector ${C_i}$ as follows. The $i^{th}$ coordinate of ${C_i}$, is the number of occurrence of $a_i$ in $c$. In this vector setting, the last system of equations will be equivalent to 
 
 	\begin{equation}
 	\label{eq:matrix}
 	\left\{ \begin{array}{lcr}
-     \vec{c_1}\cdot \vec{f} \overset{10}{\equiv} g_1 &  \\
+     {C_1}\cdot {f} \overset{10}{\equiv} g_1 &  \\
      \vdots  & \Rightarrow &  
      
      \left[ \begin{array}{l}
-     \vec{c}_1 \\
+     {C}_1 \\
      \vdots \\
-     \vec{c}_{k} \\
+     {C}_{k} \\
      \end{array}
-     \right]     \cdot\vec{f}\overset{10}{\equiv}
+     \right]     {f}\overset{10}{\equiv}
      
      \left[ \begin{array}{l}
      {g}_1 \\
      \vdots \\
      {g}_{k} \\
      \end{array}
-     \right]     
+     \right] \Rightarrow C{f} \overset{10}{\equiv} {g}   
       \\
      
-     \vec{c}_{k}\cdot \vec{f} \overset{10}{\equiv} g_{k} & &
+     {C}_{k}\cdot {f} \overset{10}{\equiv} g_{k} & &
     \end{array} \right.
     \end{equation}
-   	Let's define
+   	Defining 
    	$$
      C= \left[ \begin{array}{l}
-     \vec{c}_1 \\
+     {c}_1 \\
      \vdots \\
-     \vec{c}_{k}
+     {c}_{k}
 	 \end{array}\right] 
-	 ,\,\,\, \vec{g} = 
+	 ,\,\,\, {g} = 
 	 \left[
 	 \begin{array}{l}
 	 	g_1\\
@@ -255,83 +288,11 @@ Assume there is an ordering $a_1,\ldots,a_N$ on elements of $\mathcal{A}$. Let's
 	 \end{array}
 	 \right] 
    	$$
+   
    	
-By assumption, rows of matrix $C$ are linearly independent$\pmod{2}$, thus there must be $k$ columns $\{C^{j_1},\ldots,C^{j_k}\}$ that are linearly independent$\pmod{2}$. Using Prop.~\ref{prop:mod2}, $\{C^{j_1},\ldots,C^{j_k}\}$ are linearly independent$\pmod{5}$ as well.
-   
-   
-   We claim that for any set $\mathcal{F}_{N-k}=\{\vec{f}_j\in\mathcal{D}\, : \, j \in \{j_1,\ldots,j_k\}^c \}$, there will be a unique set $\mathcal{F}_k=\{\vec{f}_j\in\mathcal{D}:\,\, j\in\{j_1,\ldots,j_k\}\}$ such that $\mathcal{F}_k \cup\mathcal{F}_{N-k}$ is a solution for system \ref{eq:matrix}.
+We want to count the number of solutions to $C{f} \overset{10}{\equiv}{g}$. Let's denote $F_2$ to be the set of solutions to $Cf\overset{2}{\equiv}g$ and similarly $F_5$ to be the set of solutions to $Cf\overset{5}{\equiv}g$. Using lemma~\ref{lem:linearIndepp}, $|F_2|=2^{N-k}$ and $|F_5|=5^{N-k}$. We claim that for every $x\in F_2$ and $y \in F_5$ there is a unique vector $z\pmod{5}$ such that $z$ is a solution for $Cz\overset{10}{\equiv}g$. Furthermore, for every such vector $z\pmod{10}$, there is a unique pair $x\in F_2$ and $y\in F_5$. 
  
-%   This will lead to $10^{26-{k+1}}=10^{25-k}$ different choices for $\vec{f}$.
-
- 
-  Given a set $\mathcal{F}_{N-k}$, let's substitute arbitrary values of $f_j$ for $j\notin\{j_1,\ldots,j_{k}\}$ in Eq.~3. So the matrix equation will be simplified as follows
- 
- $$
-  \begin{array}{l}
- [C^{j_1},\ldots, C^{j_k}] 
- \left[ \begin{array}{l}
- f_{j_1} \\
- \vdots \\
- f_{j_k}
- \end{array}	 \right] \overset{10}{\equiv}
- \left[\begin{array}{l}
- g'_{j_1} \\
- \vdots \\
- g'_{j_k}
- \end{array}\right] 
-  \end{array} 
-  $$
- 
-Therefore 
-\begin{equation}
-\label{eq:mod5}
-  \begin{array}{l}
- [C^{j_1},\ldots, C^{j_k}] 
- \left[ \begin{array}{l}
- f_{j_1} \\
- \vdots \\
- f_{j_k}
- \end{array}	 \right] \overset{5}{\equiv}
- \left[\begin{array}{l}
- g'_{j_1} \\
- \vdots \\
- g'_{j_k}
- \end{array}\right],
- 
-  \begin{array}{l}
- [C^{j_1},\ldots, C^{j_{k}}] 
- \left[ \begin{array}{l}
- f_{j_1} \\
- \vdots \\
- f_{j_{k}}
- \end{array}	 \right] \overset{2}{\equiv}
- \left[\begin{array}{l}
- g'_{j_1} \\
- \vdots \\
- g'_{j_k}
- \end{array}\right] 
- \end{array} 
- 
- 
- \end{array} 
-  \end{equation}
- 
-Since matrix $[C^{j_1},\ldots,C^{j_k}]$ is full rank$\pmod{5}$ and$\pmod{2}$, the above linear equations respectively has unique solution $\vec{x}\pmod{5}$ and $\vec{y}\pmod{2}$. We claim that, there exists a vector $\vec{z}$ such that $\vec{z}\equiv\vec{x}\pmod{5}$ and $\vec{z}\equiv\vec{y}\pmod{2}$. To prove our claim, we first need to briefly remind Chinese Remainder Theorem.
-
-\begin{theorem}(Chinese Remainder Theorem)
-\label{chinese}
-Suppose $n_1, ..., n_k$ are positive integers that are pairwise coprime. Then, for any given sequence of integers $a_1, ..., a_k$, there exists an integer $x$ solving the following system of simultaneous congruences.
-$$
-\left\{ \begin{array}{cl}
-     x \equiv a_1 &\pmod{n_1} \\
-      \vdots &\\
-      x \equiv a_k &\pmod{n_k} \\
-\end{array} \right.		
-$$
-Furthermore, any two solutions of this system are congruent modulo the product $N = n_1 \ldots n_k$. Hence, there is a unique (non-negative) solution less than $N$.
-\end{theorem}
-
-We want to prove that there exists a vector $\vec{z}$ such that $\vec{z}\equiv\vec{x}\pmod{5}$ and $\vec{z}\equiv\vec{y}\pmod{2}$. Consider the following $k$ systems of simultaneous congruences:
+Given $x\in F_2$, and $y\in F_5$, we prove that there exists a $k$-dimensional vector ${z}$ such that ${z}\equiv{x}\pmod{5}$ and ${z}\equiv{y}\pmod{2}$. Consider the following $k$ systems of simultaneous congruences:
 $$
 \begin{array}{lcr}
 \begin{array}{l}
@@ -348,19 +309,33 @@ $$
 	
 \end{array}
 $$
-Using Chinese Remainder Theorem, there exist ${z}_1,\ldots,{z}_k$ satisfying the above congruences. Furthermore, for all $i\in[k]$, ${z}_k\pmod{10}$ is unique. Therefore $z=[z_1,\ldots,z_k]\transp{}$ will be the unique solution to Eq.~\ref{eq:mod5}. 
+Using Chinese Remainder Theorem, there exist ${z}_1,\ldots,{z}_k$ satisfying the above congruences. Therefore
+$$
+\begin{array}{lrr}
+z \overset{5}{\equiv} x  & \Rightarrow Cz \overset{5}{\equiv} Cx\overset{5}{\equiv} g &\\
+& & \Rightarrow Cz \overset{10}{\equiv} g \\
 
-
-So far we have shown that every set $\mathcal{F}_{N-k}=\{\vec{f}_j\in\mathcal{D}\, : \, j \notin \{j_1,\ldots,j_k\} \}$, there is a unique set $\mathcal{F}_k=\{\vec{f}_j\in\mathcal{D}:\,\, j\in\{j_1,\ldots,j_k\}\}$ such that $\mathcal{F}_k \cup\mathcal{F}_{N-k}$ is a solution for system \ref{eq:matrix}. Therefore, the number of solutions to system of linear equations \ref{eq:matrix} is number of sets $\mathcal{F}_{N-k}=\{\vec{f}_j\in\mathcal{D}\, : \, j \notin \{j_1,\ldots,j_k\} \}$ which is equal to $10^{N-k}$.
+z \overset{2}{\equiv} y  &\Rightarrow Cz \overset{2}{\equiv} Cx\overset{2}{\equiv} g &
+\end{array}
+$$
+ Furthermore, for all $i\in[k]$, ${z}_i\pmod{10}$ is unique. Therefore $z=[z_1,\ldots,z_k]\transp{}$ will be the unique solution to $Cf\overset{10}{\equiv}g$. So far we have shown that for every pair $(x,y)\in F_5\times F_2$ there is one and only one vector $z$ satisfying $Cz\overset{10}{\equiv}$. Therefore, the number of solutions to $Cz\overset{10}{\equiv}$ is equal to $|F_2||F_5|=10^{N-k}$ 
 \end{proof}
 
-\begin{proposition}
-\label{prop:mod2}
-Given a set of challenges $\mathcal{C}=\{c_1,\ldots,c_k\}$ s.t. $\forall i\in[k]$, the challenge $c_i$ does not contain more than four repeated letters. If $\mathcal{C}$ is linearly independent$\pmod{2}$, this implies that it is linearly independent$\pmod{5}$ as well.
-\end{proposition}
-\begin{proof}
-	
-\end{proof}
+\begin{theorem}(Chinese Remainder Theorem)
+\label{chinese}
+Suppose $n_1, ..., n_k$ are positive integers that are pairwise coprime. Then, for any given sequence of integers $a_1, ..., a_k$, there exists an integer $x$ solving the following system of simultaneous congruences.
+$$
+\left\{ \begin{array}{cl}
+     x \equiv a_1 &\pmod{n_1} \\
+      \vdots &\\
+      x \equiv a_k &\pmod{n_k} \\
+\end{array} \right.		
+$$
+Furthermore, any two solutions of this system are congruent modulo the product $N = n_1 \ldots n_k$. Hence, there is a unique (non-negative) solution less than $N$.
+\end{theorem}
+
+
+
 	
 	
 
