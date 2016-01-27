@@ -87,7 +87,9 @@
 \maketitle
 
 \section{Notation}
-Let $\mathcal{A}$ be the set of alphabet. We assume that $|\mathcal{A}|=N$. For the case of passowrd generation, $\mathcal{A}=\{A,B,\ldots,Z\}$ and $N=26$. We denote the set of digits by $\mathcal{D}$, i.e., $\mathcal{D}=\{0,\ldots,9\}$. Let's $\mathcal{C}$ denotes the set of possible challenges. We denote the $i^{th}$ coordinate of a vector $\vec{u}$ by $u_i$. \section{OneDigit Schema}.
+Let $\mathcal{A}$ be the set of alphabet. We assume that $|\mathcal{A}|=N$. For the case of passowrd generation, $\mathcal{A}=\{A,B,\ldots,Z\}$ and $N=26$. We denote the set of digits by $\mathcal{D}$, i.e., $\mathcal{D}=\{0,\ldots,9\}$. Let's $\mathcal{C}$ denotes the set of possible challenges. We denote the $i^{th}$ coordinate of a vector $\vec{u}$ by $u_i$. 
+
+\section{OneDigit Schema}. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Preprocessing step}
@@ -321,7 +323,7 @@ $$
  Furthermore, for all $i\in[k]$, ${z}_i\pmod{10}$ is unique. Therefore $z=[z_1,\ldots,z_k]\transp{}$ will be the unique solution to $Cf\overset{10}{\equiv}g$. So far we have shown that for every pair $(x,y)\in F_5\times F_2$ there is one and only one vector $z$ satisfying $Cz\overset{10}{\equiv}$. Therefore, the number of solutions to $Cz\overset{10}{\equiv}$ is equal to $|F_2||F_5|=10^{N-k}$ 
 \end{proof}
 
-\begin{theorem}(Chinese Remainder Theorem)
+\begin{lemma}}(Chinese Remainder Theorem)
 \label{chinese}
 Suppose $n_1, ..., n_k$ are positive integers that are pairwise coprime. Then, for any given sequence of integers $a_1, ..., a_k$, there exists an integer $x$ solving the following system of simultaneous congruences.
 $$
@@ -332,7 +334,7 @@ $$
 \end{array} \right.		
 $$
 Furthermore, any two solutions of this system are congruent modulo the product $N = n_1 \ldots n_k$. Hence, there is a unique (non-negative) solution less than $N$.
-\end{theorem}
+\end{lemma}}
 
 
 
